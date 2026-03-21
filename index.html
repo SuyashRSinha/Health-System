@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart Health Monitor</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Smart Health Monitoring System</h1>
+
+<div class="container">
+
+  <div class="card">
+    <div class="title">Heart Rate</div>
+    <div class="value" id="hr">--</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Temperature</div>
+    <div class="value" id="temp">--</div>
+  </div>
+
+  <div class="card">
+    <div class="title">SpO2</div>
+    <div class="value" id="spo2">--</div>
+  </div>
+
+  <div class="card">
+    <div class="title">ECG</div>
+    <div class="value" id="ecg">--</div>
+  </div>
+
+  <div class="card">
+    <div class="title">Glucose</div>
+    <div class="value" id="glucose">--</div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Live Data from ESP32 via ThingSpeak
+</div>
+
+<script>
+async function getData() {
+  try {
+    let res = await fetch("https://api.thingspeak.com/channels/3306909/feeds/last.json");
+    let data = await res.json();
+
+    document.getElementById("hr").innerText = data.field1 + " BPM";
+    document.getElementById("temp").innerText = data.field2 + " °C";
+    document.getElementById("spo2").innerText = data.field3 + " %";
+    document.getElementById("ecg").innerText = data.field4;
+    document.getElementById("glucose").innerText = data.field5 + " mg/dL";
+
+  } catch (error) {
+    console.log("Error fetching data");
+  }
+}
+
+setInterval(getData, 5000);
+getData();
+</script>
+
+</body>
+</html>
