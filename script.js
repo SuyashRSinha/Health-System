@@ -43,7 +43,7 @@ db.ref("health").on("value", function(snapshot) {
   document.getElementById("hr").innerText = (data.heartRate || 0) + " BPM";
   document.getElementById("temp").innerText = (data.temperature || 0) + " °C";
   document.getElementById("spo2").innerText = (data.spo2 || 0) + " %";
-  document.getElementById("glucose").innerText = (data.glucose || 0) + " mg/dL";
+  document.getElementById("glucose").innerText = (data.glucose || 0) + "";
 });
 
 // =======================
