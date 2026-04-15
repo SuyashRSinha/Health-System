@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body style="display:none;">
+
+<!-- 🔝 HEADER -->
+<div class="top-bar">
+  <h3>🩺 Health Dashboard</h3>
+  <div>
+    <span id="username"></span>
+    <button onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<h2 style="padding:20px;">Patient Monitoring</h2>
+
+<!-- 📊 DATA -->
+<div class="container">
+  <div class="card">❤️ HR: <span id="hr"></span></div>
+  <div class="card">🌡 Temp: <span id="temp"></span></div>
+  <div class="card">🫁 SpO2: <span id="spo2"></span></div>
+  <div class="card">🩸 Glucose: <span id="glucose"></span></div>
+</div>
+
+<!-- 📈 CHART -->
+<div class="charts">
+  <div class="chart-box"><canvas id="hrChart"></canvas></div>
+  <div class="chart-box"><canvas id="tempChart"></canvas></div>
+  <div class="chart-box"><canvas id="spo2Chart"></canvas></div>
+  <div class="chart-box"><canvas id="glucoseChart"></canvas></div>
+</div>
+
+<!-- 🔻 FOOTER -->
+<div class="footer">
+  Real-time Health Monitoring | ESP32 + Firebase
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
