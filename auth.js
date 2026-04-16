@@ -102,3 +102,39 @@ function forgotPassword() {
       showMsg("Error: " + error.message, "red");
     });
 }
+
+// 🔵 GOOGLE LOGIN
+function googleLogin() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+
+  auth.signInWithPopup(provider)
+    .then((result) => {
+      const user = result.user;
+
+      // ✅ SAVE USER IF NEW
+      db.ref("users/" + user.uid).once("value")
+        .then((snap) => {
+
+          if (!snap.exists()) {
+            return db.ref("users/" + user.uid).set({
+              name: user.displayName,
+              email: user.email,
+              phone: user.phoneNumber || "N/A"
+            });
+          }
+
+        })
+        .then(() => {
+          showMsg("Google Login Successful ✅", "lightgreen");
+
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 800);
+        });
+
+    })
+    .catch((error) => {
+      console.error(error);
+      showMsg("Google Login Failed ❌", "red");
+    });
+}
