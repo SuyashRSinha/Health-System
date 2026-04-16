@@ -107,7 +107,7 @@ function forgotPassword() {
 function googleLogin() {
   const provider = new firebase.auth.GoogleAuthProvider();
 
-  auth.signInWithPopup(provider)
+  auth.signInWithRedirect(provider)
     .then((result) => {
       const user = result.user;
 
