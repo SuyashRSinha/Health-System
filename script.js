@@ -1,3 +1,4 @@
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 // 🔥 FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDWaXBAuxdN4WvXK62x-qIQEMCEe1-qs40",
@@ -67,19 +68,34 @@ function createChart(id, label) {
   });
 }
 
-// 🔐 AUTH STATE CHECK
+// 🔐 AUTH STATE CHECK (FINAL FIXED)
+let currentUID = null;
+
+// Hide page initially to avoid flicker
+document.body.style.display = "none";
+
 auth.onAuthStateChanged((user) => {
-  if (!user) {
-    window.location.href = "login.html";
-    return;
+
+  if (user) {
+    currentUID = user.uid;
+
+    console.log("✅ Logged in UID:", currentUID);
+
+    // ✅ Show dashboard only AFTER auth confirmed
+    document.body.style.display = "block";
+
+    // ✅ Load user-specific data
+    loadUserData(currentUID);
+
+  } else {
+    console.log("❌ No user found → redirecting");
+
+    // ⏳ Delay prevents instant flicker
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 800);
   }
 
-  document.body.style.display = "block";
-  currentUID = user.uid;
-
-  console.log("✅ Logged in UID:", currentUID);
-
-  loadUserData(currentUID);
 });
 
 // 👤 LOAD USER NAME + DATA
