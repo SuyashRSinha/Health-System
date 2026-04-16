@@ -103,18 +103,21 @@ function forgotPassword() {
     });
 }
 
-// 🔵 GOOGLE LOGIN
 function googleLogin() {
   const provider = new firebase.auth.GoogleAuthProvider();
 
-  auth.signInWithRedirect(provider)
+  // ✅ KEEP USER LOGGED IN (IMPORTANT FIX)
+  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(() => {
+      return auth.signInWithPopup(provider);
+    })
     .then((result) => {
+
       const user = result.user;
 
-      // ✅ SAVE USER IF NEW
-      db.ref("users/" + user.uid).once("value")
+      // ✅ SAVE USER IF NEW (no backend change)
+      return db.ref("users/" + user.uid).once("value")
         .then((snap) => {
-
           if (!snap.exists()) {
             return db.ref("users/" + user.uid).set({
               name: user.displayName,
@@ -122,19 +125,14 @@ function googleLogin() {
               phone: user.phoneNumber || "N/A"
             });
           }
-
         })
         .then(() => {
-          showMsg("Google Login Successful ✅", "lightgreen");
-
-          setTimeout(() => {
-            window.location.href = "index.html";
-          }, 800);
+          window.location.href = "index.html";
         });
 
     })
     .catch((error) => {
       console.error(error);
-      showMsg("Google Login Failed ❌", "red");
+      alert("Google login failed");
     });
 }
