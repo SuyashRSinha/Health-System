@@ -1,4 +1,3 @@
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 // 🔥 FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDWaXBAuxdN4WvXK62x-qIQEMCEe1-qs40",
@@ -13,6 +12,9 @@ if (!firebase.apps.length) {
 
 const auth = firebase.auth();
 const db = firebase.database();
+
+// ✅ 🔥 NOW SET PERSISTENCE (AFTER auth defined)
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 // 🌍 GLOBAL VARIABLES
 let hrChart, tempChart, spo2Chart, glucoseChart;
@@ -57,21 +59,14 @@ function createChart(id, label) {
         }
       },
       scales: {
-        x: {
-          ticks: { color: "white" }
-        },
-        y: {
-          ticks: { color: "white" }
-        }
+        x: { ticks: { color: "white" } },
+        y: { ticks: { color: "white" } }
       }
     }
   });
 }
 
-// 🔐 AUTH STATE CHECK (FINAL FIXED)
-let currentUID = null;
-
-// Hide page initially to avoid flicker
+// 🔐 AUTH CHECK
 document.body.style.display = "none";
 
 auth.onAuthStateChanged((user) => {
@@ -81,16 +76,11 @@ auth.onAuthStateChanged((user) => {
 
     console.log("✅ Logged in UID:", currentUID);
 
-    // ✅ Show dashboard only AFTER auth confirmed
     document.body.style.display = "block";
 
-    // ✅ Load user-specific data
     loadUserData(currentUID);
 
   } else {
-    console.log("❌ No user found → redirecting");
-
-    // ⏳ Delay prevents instant flicker
     setTimeout(() => {
       window.location.href = "login.html";
     }, 800);
@@ -98,22 +88,18 @@ auth.onAuthStateChanged((user) => {
 
 });
 
-// 👤 LOAD USER NAME + DATA
+// 👤 LOAD USER DATA
 function loadUserData(uid) {
 
-  // 🔹 USER INFO
   db.ref("users/" + uid).once("value")
     .then((snap) => {
       const data = snap.val();
 
-      if (data && data.name) {
-        document.getElementById("username").innerText = data.name;
-      } else {
-        document.getElementById("username").innerText = "User";
-      }
+      document.getElementById("username").innerText =
+        data?.name || "User";
     });
 
-  // ❤️ LIVE SENSOR DATA
+  // ❤️ LIVE DATA
   db.ref("users/" + uid + "/health").on("value", snap => {
     const d = snap.val();
     if (!d) return;
@@ -124,24 +110,16 @@ function loadUserData(uid) {
     document.getElementById("glucose").innerText = d.glucose + " mg/dL";
   });
 
-  // 📊 HISTORY DATA (GRAPH)
+  // 📊 HISTORY DATA
   db.ref("users/" + uid + "/history").on("value", snap => {
     const data = snap.val();
-
-    if (!data) {
-      console.warn("⚠ No history data found");
-      return;
-    }
+    if (!data) return;
 
     const labels = [];
-    const hrData = [];
-    const tempData = [];
-    const spo2Data = [];
-    const glucoseData = [];
+    const hrData = [], tempData = [], spo2Data = [], glucoseData = [];
 
-    Object.values(data).forEach((item, index) => {
-      labels.push(index + 1);
-
+    Object.values(data).forEach((item, i) => {
+      labels.push(i + 1);
       hrData.push(item.heartRate || 0);
       tempData.push(item.temperature || 0);
       spo2Data.push(item.spo2 || 0);
@@ -166,11 +144,7 @@ function updateChart(chart, labels, data) {
 
 // 🚪 LOGOUT
 function logout() {
-  auth.signOut()
-    .then(() => {
-      window.location.href = "login.html";
-    })
-    .catch((error) => {
-      console.error("Logout Error:", error);
-    });
+  auth.signOut().then(() => {
+    window.location.href = "login.html";
+  });
 }
