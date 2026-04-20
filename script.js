@@ -1,11 +1,9 @@
-// 🔥 FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDWaXBAuxdN4WvXK62x-qIQEMCEe1-qs40",
   authDomain: "health-monitor-3223b.firebaseapp.com",
   databaseURL: "https://health-monitor-3223b-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
-// ✅ INIT FIREBASE
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
@@ -13,14 +11,11 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.database();
 
-// ✅ 🔥 NOW SET PERSISTENCE (AFTER auth defined)
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-// 🌍 GLOBAL VARIABLES
 let hrChart, tempChart, spo2Chart, glucoseChart;
 let currentUID = null;
 
-// 🚀 INIT CHARTS
 window.onload = () => {
   hrChart = createChart("hrChart", "Heart Rate");
   tempChart = createChart("tempChart", "Temperature");
@@ -28,7 +23,6 @@ window.onload = () => {
   glucoseChart = createChart("glucoseChart", "Glucose");
 };
 
-// 📈 CREATE CHART FUNCTION
 function createChart(id, label) {
   const ctx = document.getElementById(id);
 
@@ -66,7 +60,6 @@ function createChart(id, label) {
   });
 }
 
-// 🔐 AUTH CHECK
 document.body.style.display = "none";
 
 auth.onAuthStateChanged((user) => {
@@ -85,10 +78,8 @@ auth.onAuthStateChanged((user) => {
       window.location.href = "login.html";
     }, 800);
   }
-
 });
 
-// 👤 LOAD USER DATA
 function loadUserData(uid) {
 
   db.ref("users/" + uid).once("value")
@@ -98,8 +89,6 @@ function loadUserData(uid) {
       document.getElementById("username").innerText =
         data?.name || "User";
     });
-
-  // ❤️ LIVE DATA
   db.ref("users/" + uid + "/health").on("value", snap => {
     const d = snap.val();
     if (!d) return;
@@ -110,7 +99,6 @@ function loadUserData(uid) {
     document.getElementById("glucose").innerText = d.glucose + " mg/dL";
   });
 
-  // 📊 HISTORY DATA
   db.ref("users/" + uid + "/history").on("value", snap => {
     const data = snap.val();
     if (!data) return;
@@ -133,7 +121,6 @@ function loadUserData(uid) {
   });
 }
 
-// 🔄 UPDATE CHART
 function updateChart(chart, labels, data) {
   if (!chart) return;
 
@@ -142,7 +129,6 @@ function updateChart(chart, labels, data) {
   chart.update();
 }
 
-// 🚪 LOGOUT
 function logout() {
   auth.signOut().then(() => {
     window.location.href = "login.html";
