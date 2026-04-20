@@ -1,26 +1,20 @@
-// 🔥 FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDWaXBAuxdN4WvXK62x-qIQEMCEe1-qs40",
   authDomain: "health-monitor-3223b.firebaseapp.com",
   databaseURL: "https://health-monitor-3223b-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
-// ✅ INIT
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
 const auth = firebase.auth();
 const db = firebase.database();
-
-// 📢 MESSAGE
 function showMsg(msg, color = "white") {
   const el = document.getElementById("msg");
   el.innerText = msg;
   el.style.color = color;
 }
-
-// 🔐 LOGIN
 function login() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -41,7 +35,6 @@ function login() {
     });
 }
 
-// 🆕 SIGNUP (FIXED)
 function signup() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -61,8 +54,6 @@ function signup() {
 
   auth.createUserWithEmailAndPassword(email, password)
     .then((cred) => {
-
-      // ✅ SAVE USER DATA
       return db.ref("users/" + cred.user.uid).set({
         name: name,
         phone: phone,
@@ -72,8 +63,6 @@ function signup() {
     })
     .then(() => {
       showMsg("Account Created Successfully ✅", "lightgreen");
-
-      // 🔁 Move back to login state
       setTimeout(() => {
         auth.signOut();
       }, 1000);
@@ -84,7 +73,7 @@ function signup() {
     });
 }
 
-// 🔑 FORGOT PASSWORD (FIXED)
+
 function forgotPassword() {
   const email = document.getElementById("email").value.trim();
 
@@ -106,7 +95,7 @@ function forgotPassword() {
 function googleLogin() {
   const provider = new firebase.auth.GoogleAuthProvider();
 
-  // ✅ KEEP USER LOGGED IN (IMPORTANT FIX)
+
   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
     .then(() => {
       return auth.signInWithPopup(provider);
@@ -115,7 +104,6 @@ function googleLogin() {
 
       const user = result.user;
 
-      // ✅ SAVE USER IF NEW (no backend change)
       return db.ref("users/" + user.uid).once("value")
         .then((snap) => {
           if (!snap.exists()) {
