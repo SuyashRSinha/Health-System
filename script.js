@@ -17,10 +17,10 @@ let hrChart, tempChart, spo2Chart, glucoseChart;
 let currentUID = null;
 
 window.onload = () => {
-  hrChart = createChart("hrChart", "Heart Rate");
+  hrChart = createChart("hrChart", "Heart Rate/Pulse");
   tempChart = createChart("tempChart", "Temperature");
   spo2Chart = createChart("spo2Chart", "SpO2");
-  glucoseChart = createChart("glucoseChart", "Glucose");
+  glucoseChart = createChart("glucoseChart", "ECG");
 };
 
 function createChart(id, label) {
