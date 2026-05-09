@@ -128,3 +128,28 @@ button:hover {
   background: #020617;
   color: #94a3b8;
 }
+
+.device-connect{
+  display:flex;
+  gap:10px;
+  padding:20px;
+}
+
+.device-connect input{
+  padding:12px;
+  width:300px;
+  border:none;
+  border-radius:10px;
+  outline:none;
+  font-size:16px;
+}
+
+.device-connect button{
+  padding:12px 20px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  background:#00bfff;
+  color:white;
+  font-weight:bold;
+}
