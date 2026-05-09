@@ -24,6 +24,20 @@
 
 <h2 style="padding:20px;">Patient Monitoring</h2>
 
+<div class="device-connect">
+
+  <input
+    type="text"
+    id="deviceId"
+    placeholder="Enter Device ID (Example: ESP32_001)"
+  >
+
+  <button onclick="connectDevice()">
+    Connect Device
+  </button>
+
+</div>
+
 <div class="container">
   <div class="card">❤️ HR: <span id="hr"></span></div>
   <div class="card">🌡 Temp: <span id="temp"></span></div>
