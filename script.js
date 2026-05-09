@@ -129,6 +129,36 @@ function updateChart(chart, labels, data) {
   chart.update();
 }
 
+function connectDevice() {
+
+  const deviceId =
+    document.getElementById("deviceId").value;
+
+  if (!deviceId) {
+    alert("Enter Device ID");
+    return;
+  }
+
+  db.ref("devices/" + deviceId).set({
+    uid: currentUID,
+    connectedAt: Date.now()
+  })
+
+  .then(() => {
+
+    alert("ESP32 Connected Successfully");
+
+  })
+
+  .catch((error) => {
+
+    console.log(error);
+
+    alert("Connection Failed");
+
+  });
+}
+
 function logout() {
   auth.signOut().then(() => {
     window.location.href = "login.html";
