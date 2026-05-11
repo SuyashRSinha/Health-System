@@ -38,15 +38,20 @@ function createChart(id, label) {
       datasets: [{
         label: label,
         data: [],
-        borderWidth: 2,
-        tension: 0.4,
-        fill: false
+        borderWidth: 3,
+        tension: 0.5,
+        fill: false,
+        pointRadius: 3,
+        pointHoverRadius: 6,
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      animation: false,
+      animation: {
+        duration: 1500,
+        easing: "easeInOutQuart"
+      },
       plugins: {
         legend: {
           labels: { color: "white" }
@@ -71,7 +76,14 @@ auth.onAuthStateChanged((user) => {
 
     document.body.style.display = "block";
 
-    loadUserData(currentUID);
+    db.ref("users/" + currentUID).once("value")
+      .then((snap) => {
+        const data = snap.val();
+
+        document.getElementById("username").innerText =
+          data?.name || "User";
+      });
+
 
   } else {
     setTimeout(() => {
@@ -132,7 +144,7 @@ function updateChart(chart, labels, data) {
 function connectDevice() {
 
   const deviceId =
-    document.getElementById("deviceId").value;
+    document.getElementById("deviceId").value.trim();
 
   if (!deviceId) {
     alert("Enter Device ID");
@@ -147,6 +159,7 @@ function connectDevice() {
   .then(() => {
 
     alert("ESP32 Connected Successfully");
+    loadUserData(currentUID);
 
   })
 
